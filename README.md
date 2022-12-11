@@ -47,4 +47,4 @@ stlark@stlark-GF63-Thin-9SCSR:~$
 
 Развернутый сайт доступен по домену admin.stlark.ru
 
-![изображение](https://user-images.githubusercontent.com/40709727/206892350-d91e6bd4-09c7-43e1-9ab3-00fa308b9e1f.png)
+![изображение](https://github.com/st1lark/admin_test/blob/main/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%D0%BE%D1%82%202022-12-11%2010-51-22.png)

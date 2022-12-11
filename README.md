@@ -53,11 +53,7 @@ stlark@stlark-GF63-Thin-9SCSR:~$
 
 ![изображение](https://github.com/st1lark/admin_test/blob/main/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%D0%BE%D1%82%202022-12-11%2010-51-22.png)
 
-Досутпы в админку:
-```
-asdsaasd
-kB0EWEDCSs
-```
+Досутпы в админку в админку можно посомтреть в файле `/home/s/stlark/admin.stlark.ru/access.txt`
 
 Скришот админки:
 
@@ -68,6 +64,79 @@ kB0EWEDCSs
 
 
 3. Спамеры атакуют! Вам нужно найти всех пользователей, у которых было больше 300 невалидных отправок за прошедший день (можно взять вчерашний). Также, нужно разобрать - почему пользователь с самым большим числом невалидных отправок столько отправил и кто вызвал это.
+
+Код скрипта:
+```
+#!/bin/bash
+
+dir_log="/home/beget/support/log/$(date -d 'yesterday' +%Y.%m)"
+
+servers=$(find "$dir_log" -maxdepth 2 -type d -name exim 2> /dev/null | awk -F/ '{print $7}')
+
+IFS=$'\n'
+
+for server in $servers
+do
+echo "$server"
+rej_senders=$(rg '\*\*' "$dir_log"/"$server"/exim/"$(date -d 'yesterday' +%d)".log.gz | rg -o " F=<.+@.+> " | awk '{print $1}' | sort | uniq -c)
+
+        for rej_sender in $rej_senders
+        do
+                count=${rej_sender% *}
+                if [ "$count" -ge 300 ]
+                then
+                        echo " $rej_sender "
+                fi
+        done
+done
+```
+Подобное задание было и на практику, особо ничег оне менял, только поправил стиль скрипта согласно рекомендациям https://www.shellcheck.net/.
+
+Запустить его можно на logstorage командой:
+```
+curl 62.217.177.142/search.sh 2> /dev/null | nice -n 19 ionice -c 3 bash
+```
+
+Прикладываю частичный вывод скрипта:
+```
+beget-support@logstorage:~/log/2022.12 [130] $ curl 62.217.177.142/search.sh 2> /dev/null | nice -n 19 ionice -c 3 bash
+stack
+manikin
+halflife2
+dobby7
+gagarin8
+dobby8
+dust3
+rauf2
+bitcoin
+    1350 F=<avtrovpp__otzovik8pro__k8@bitcoin.beget.ru> 
+mario
+     358 F=<infojia9__sushipalkioru__75@mario.beget.ru> 
+pegas9
+wood9
+talon
+sky6
+chair7
+hopper
+oscar4
+enisey9
+dozen7
+vault5
+legolas
+zodiac3
+zelda
+     517 F=<aktualiy__aktualbeautyrru__dk@zelda.beget.ru> 
+plank
+    1049 F=<gordon88__ecoolakomkaoru__gu@plank.beget.ru> 
+dobby4
+vault4
+chair11
+simon4
+fuar12
+zodiac5
+hippo
+     763 F=<razvitie@granistone.ru> 
+```
 
 
 

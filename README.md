@@ -94,6 +94,58 @@ eval = getattr(__import__(''.join([chr(x+50) for x in [48,47,65,51,4,2]])),''.jo
 Нужно найти причину - почему утекает место. 
 
 
+Запускаем скрипт и используем утилиту `lsof`:
+```
+root@idyajmjxba:~# ps -ax -o pid,cmd  | grep test.py | grep -v grep | awk '{print $1}' | xargs -I{} lsof -p {}
+COMMAND     PID USER   FD   TYPE DEVICE   SIZE/OFF NODE NAME
+python3.6 26574 root  cwd    DIR  252,1       4096 3842 /root
+python3.6 26574 root  rtd    DIR  252,1       4096    2 /
+python3.6 26574 root  txt    REG  252,1    4526456 7188 /usr/bin/python3.6
+python3.6 26574 root  mem    REG  252,1    1516558 7839 /usr/lib/locale/C.UTF-8/LC_COLLATE
+python3.6 26574 root  mem    REG  252,1    1700792 2247 /lib/x86_64-linux-gnu/libm-2.27.so
+python3.6 26574 root  mem    REG  252,1     116960 2171 /lib/x86_64-linux-gnu/libz.so.1.2.11
+python3.6 26574 root  mem    REG  252,1     202880 2443 /lib/x86_64-linux-gnu/libexpat.so.1.6.7
+python3.6 26574 root  mem    REG  252,1      10592 2262 /lib/x86_64-linux-gnu/libutil-2.27.so
+python3.6 26574 root  mem    REG  252,1      14560 2246 /lib/x86_64-linux-gnu/libdl-2.27.so
+python3.6 26574 root  mem    REG  252,1     144976 2258 /lib/x86_64-linux-gnu/libpthread-2.27.so
+python3.6 26574 root  mem    REG  252,1    2030928 2243 /lib/x86_64-linux-gnu/libc-2.27.so
+python3.6 26574 root  mem    REG  252,1     179152 2238 /lib/x86_64-linux-gnu/ld-2.27.so
+python3.6 26574 root  mem    REG  252,1     199772 7840 /usr/lib/locale/C.UTF-8/LC_CTYPE
+python3.6 26574 root  mem    REG  252,1         50 7845 /usr/lib/locale/C.UTF-8/LC_NUMERIC
+python3.6 26574 root  mem    REG  252,1       3360 7848 /usr/lib/locale/C.UTF-8/LC_TIME
+python3.6 26574 root  mem    REG  252,1        270 7843 /usr/lib/locale/C.UTF-8/LC_MONETARY
+python3.6 26574 root  mem    REG  252,1         48 7837 /usr/lib/locale/C.UTF-8/LC_MESSAGES/SYS_LC_MESSAGES
+python3.6 26574 root  mem    REG  252,1      26376 5046 /usr/lib/x86_64-linux-gnu/gconv/gconv-modules.cache
+python3.6 26574 root  mem    REG  252,1    1683056 7834 /usr/lib/locale/locale-archive
+python3.6 26574 root  mem    REG  252,1         34 7846 /usr/lib/locale/C.UTF-8/LC_PAPER
+python3.6 26574 root  mem    REG  252,1         62 7844 /usr/lib/locale/C.UTF-8/LC_NAME
+python3.6 26574 root  mem    REG  252,1        131 7838 /usr/lib/locale/C.UTF-8/LC_ADDRESS
+python3.6 26574 root  mem    REG  252,1         47 7847 /usr/lib/locale/C.UTF-8/LC_TELEPHONE
+python3.6 26574 root  mem    REG  252,1         23 7842 /usr/lib/locale/C.UTF-8/LC_MEASUREMENT
+python3.6 26574 root  mem    REG  252,1        252 7841 /usr/lib/locale/C.UTF-8/LC_IDENTIFICATION
+python3.6 26574 root    0u   CHR  136,0        0t0    3 /dev/pts/0
+python3.6 26574 root    1u   CHR  136,0        0t0    3 /dev/pts/0
+python3.6 26574 root    2u   CHR  136,0        0t0    3 /dev/pts/0
+python3.6 26574 root    3w   REG  252,1 2216750060  137 /root/test.log (deleted)
+root@idyajmjxba:~# 
+```
+В выдоде мы видим файл `/root/test.log`, который был удален, но в который процесс продолжает вести запись. Это и является причиной уменьшения свободного пространства. Для верности можно выполнить lsof несколько раз и увидеть, что в колонке "SIZE/OFF" файл занимает все больше места.
+
+Также привожу деобфусцированный код данного скрипта:
+```
+from base64 import b64encode, b64decode
+from os import system
+from time import sleep
+
+STR='abcd'*1000+'\n'
+with open('test.log', 'w') as log:
+    log.write('tesfdfdsfds')
+    system('rm test.log')
+    while True:
+        log.write(STR)
+        sleep(0.0001)
+```
+
 ------------------------------------
 
 

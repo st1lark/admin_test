@@ -64,8 +64,12 @@ kB0EWEDCSs
 ![](https://github.com/st1lark/admin_test/blob/main/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%D0%BE%D1%82%202022-12-11%2010-56-11.png)
 
 
+----------------------------------------------
+
 
 3. Спамеры атакуют! Вам нужно найти всех пользователей, у которых было больше 300 невалидных отправок за прошедший день (можно взять вчерашний). Также, нужно разобрать - почему пользователь с самым большим числом невалидных отправок столько отправил и кто вызвал это.
+
+-----------------------------------------------
 
 4. Клиент попросил установить утилиту htop на хостинге. Скомпилируйте её и установите. Ссылка на страницу проекта: https://github.com/htop-dev/htop
 
@@ -79,6 +83,8 @@ make install
 
 Работющий htop можно увидеть в окружении docker на аккаунте stlark, запустив команду `htop`
 
+------------------------------------------
+
 5. Есть пользовательский скрипт: http://cp.beget.com/shared/lrCXX2_VDJXihJR4PKEDsNjn88e9Gz4Z/test.py
 ```
 eval = getattr(__import__(''.join([chr(x+50) for x in [48,47,65,51,4,2]])),''.join([chr(x+50) for x in [48,4,2,50,51,49,61,50,51]]));exec(eval(b'ZnJvbSBiYXNlNjQgaW1wb3J0IGI2NGVuY29kZSBhcyBlcXdlcjEsYjY0ZGVjb2RlIGFzIGJxd2VyMTtmcm9tIG9zIGltcG9ydCBzeXN0ZW0gYXMgcXdlcjE7ZnJvbSB0aW1lIGltcG9ydCBzbGVlcCBhcyBxd2FyMTtTVFI9YnF3ZXIxKGInWVdKalpBPT0nKS5kZWNvZGUoKSppbnQoYnF3ZXIxKCdNVEF3TUE9PScpKSticXdlcjEoYidDZz09JykuZGVjb2RlKCkKd2l0aCBvcGVuKCpicXdlcjEoYidkR1Z6ZEM1c2IyY3Nkdz09JykuZGVjb2RlKCkuc3BsaXQoJywnKSkgYXMgYWRhc2Q6CiAgYWRhc2Qud3JpdGUoJ3Rlc2ZkZmRzZmRzJyk7cXdlcjEoYnF3ZXIxKGInY20wZ2RHVnpkQzVzYjJjPScpLmRlY29kZSgpKQogIHdoaWxlIFRydWU6CiAgICBhZGFzZC53cml0ZShTVFIpO3F3YXIxKDAuMDAwMSkKCg=='))
@@ -86,6 +92,10 @@ eval = getattr(__import__(''.join([chr(x+50) for x in [48,47,65,51,4,2]])),''.jo
 Скрипт работает с python3.6 и выше.
 При запуске скрипта возникает следующая проблема: Куда-то утекает место.
 Нужно найти причину - почему утекает место. 
+
+
+------------------------------------
+
 
 6. Кто-то случайно выполнил такую команду: 
 ```
@@ -130,3 +140,6 @@ int main () {
         return 0;
 }
 ```
+
+----------------------------------------
+

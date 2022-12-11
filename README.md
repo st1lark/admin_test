@@ -1,4 +1,4 @@
-1. Смонтируйте удаленную директорию на аккаунте хостинга в директорию на локальном компьютере (воспользуйтесь sshfs).
+**1. Смонтируйте удаленную директорию на аккаунте хостинга в директорию на локальном компьютере (воспользуйтесь sshfs).**
 
 Командая для монтирования:
 ```
@@ -45,9 +45,9 @@ stlark@stlark-GF63-Thin-9SCSR:~$
 
 --------------------------------
 
-2. Клиент попросил развернуть сайт http://cp.beget.com/shared/lVtkDsffGGjOb_-29LegqF1WdFUY0jgR/backup.tar.gz, вам нужно помочь ему. Сайт нужно развернуть на личном аккаунте с тарифом виртуального хостинга (если аккаунта нет, то создайте с тестовым периодом).
+**2. Клиент попросил развернуть сайт http://cp.beget.com/shared/lVtkDsffGGjOb_-29LegqF1WdFUY0jgR/backup.tar.gz, вам нужно помочь ему. Сайт нужно развернуть на личном аккаунте с тарифом виртуального хостинга (если аккаунта нет, то создайте с тестовым периодом).**
 
-Развернутый сайт доступен по домену admin.stlark.ru
+Развернутый сайт доступен по ссылке http://admin.stlark.ru
 
 Тестовая запись открывается
 
@@ -63,7 +63,7 @@ stlark@stlark-GF63-Thin-9SCSR:~$
 ----------------------------------------------
 
 
-3. Спамеры атакуют! Вам нужно найти всех пользователей, у которых было больше 300 невалидных отправок за прошедший день (можно взять вчерашний). Также, нужно разобрать - почему пользователь с самым большим числом невалидных отправок столько отправил и кто вызвал это.
+**3. Спамеры атакуют! Вам нужно найти всех пользователей, у которых было больше 300 невалидных отправок за прошедший день (можно взять вчерашний). Также, нужно разобрать - почему пользователь с самым большим числом невалидных отправок столько отправил и кто вызвал это.**
 
 Код скрипта:
 ```
@@ -78,7 +78,7 @@ IFS=$'\n'
 for server in $servers
 do
 echo "$server"
-rej_senders=$(rg '\*\*' "$dir_log"/"$server"/exim/"$(date -d 'yesterday' +%d)".log.gz | rg -o " F=<.+@.+> " | awk '{print $1}' | sort | uniq -c)
+rej_senders=$(rg '\*\*' "$dir_log"/"$server"/exim/"$(date -d 'yesterday' +%d)".log.gz | rg -o " F=<.+@.+> " | awk '{print $1}' | sort | uniq -c | sort -nk 1)
 
         for rej_sender in $rej_senders
         do
@@ -136,13 +136,62 @@ fuar12
 zodiac5
 hippo
      763 F=<razvitie@granistone.ru> 
+angara7
+everest2
+serena3
+krovat1
+delonghi
+wood5
+serena4
+dust9
+vader1
+guppi
+delta2
+kabigon
+vision9
+fuar5
+fermi7
+quake4
+     328 F=<danilo8q__facemoovezcom__32@quake4.beget.ru> 
+    1076 F=<ivanus__smfusosudanuru__aj@quake4.beget.ru> 
+saturn5
+stingray
+ocean10
+jabba
+     381 F=<infol9n8@jabba.beget.ru> 
+     566 F=<altairdo__bolshyevyzovynso9r__ug@jabba.beget.ru> 
+dobby3
+gimli
+     378 F=<kopiburz@gimli.beget.ru> 
+     442 F=<rusev1jz@gimli.beget.ru> 
+    2666 F=<elenan27@gimli.beget.ru> 
+wood3
+buster
+nmark
+chip
 ```
 
+Разберем, почему у отправителя `aktualiy__aktualbeautyrru__dk@zelda.beget.ru` на сервере `zelda` было отклонено столько писем.
 
+```
+rg aktualiy__aktualbeautyrru__dk zelda/exim/10.log.gz | grep "\*\*"
+2022-12-10 00:00:16.881 [40021] 1p3kTg-000APT-8y ** aktualbeauty@yandex.ru F=<aktualiy__aktualbeautyrru__dk@zelda.beget.ru> P=<aktualiy__aktualbeautyrru__dk@zelda.beget.ru> R=dnslookup T=remote_smtp H=mx.yandex.ru [77.88.21.249]:25 I=[5.101.157.143]43948 X=TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128 CV=yes DN="/C=RU/ST=Moscow/L=Moscow/O=Yandex LLC/CN=mx.yandex.ru": SMTP error from remote mail server after end of data: 554 5.7.1 Message rejected under suspicion of SPAM; https://ya.cc/1IrBc 1670619616-G0iPGN2Sx0U1-B1hNlHJe
+2022-12-10 00:02:21.883 [40173] 1p3kVh-000ARv-DO ** aktualbeauty@yandex.ru F=<aktualiy__aktualbeautyrru__dk@zelda.beget.ru> P=<aktualiy__aktualbeautyrru__dk@zelda.beget.ru> R=dnslookup T=remote_smtp H=mx.yandex.ru [77.88.21.249]:25 I=[5.101.157.143]59258 X=TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128 CV=yes DN="/C=RU/ST=Moscow/L=Moscow/O=Yandex LLC/CN=mx.yandex.ru": SMTP error from remote mail server after end of data: 554 5.7.1 Message rejected under suspicion of SPAM; https://ya.cc/1IrBc 1670619741-L2ic4M2SluQ1-6XLgicoW
+2022-12-10 00:04:27.451 [40332] 1p3kXi-000AUU-V5 ** aktualbeauty@yandex.ru F=<aktualiy__aktualbeautyrru__dk@zelda.beget.ru> P=<aktualiy__aktualbeautyrru__dk@zelda.beget.ru> R=dnslookup T=remote_smtp H=mx.yandex.ru [77.88.21.249]:25 I=[5.101.157.143]16688 X=TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128 CV=yes DN="/C=RU/ST=Moscow/L=Moscow/O=Yandex LLC/CN=mx.yandex.ru": SMTP error from remote mail server after end of data: 554 5.7.1 Message rejected under suspicion of SPAM; https://ya.cc/1IrBc 1670619867-R4iwNU2URmI1-MFnSLtvl
+2022-12-10 00:06:30.114 [40510] 1p3kZh-000AXM-Lc ** aktualbeauty@yandex.ru F=<aktualiy__aktualbeautyrru__dk@zelda.beget.ru> P=<aktualiy__aktualbeautyrru__dk@zelda.beget.ru> R=dnslookup T=remote_smtp H=mx.yandex.ru [77.88.21.249]:25 I=[5.101.157.143]45310 X=TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128 CV=yes DN="/C=RU/ST=Moscow/L=Moscow/O=Yandex LLC/CN=mx.yandex.ru": SMTP error from remote mail server after end of data: 554 5.7.1 Message rejected under suspicion of SPAM; https://ya.cc/1IrBc 1670619990-T6i5GO2XXqM1-u9viwvWK
+2022-12-10 00:08:33.490 [40673] 1p3kbh-000AZz-0t ** aktualbeauty@yandex.ru F=<aktualiy__aktualbeautyrru__dk@zelda.beget.ru> P=<aktualiy__aktualbeautyrru__dk@zelda.beget.ru> R=dnslookup T=remote_smtp H=mx.yandex.ru [77.88.21.249]:25 I=[5.101.157.143]48816 X=TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128 CV=yes DN="/C=RU/ST=Moscow/L=Moscow/O=Yandex LLC/CN=mx.yandex.ru": SMTP error from remote mail server after end of data: 554 5.7.1 Message rejected under suspicion of SPAM; https://ya.cc/1IrBc 1670620113-X8iDTO2TBSw1-8noyjuXI
+2022-12-10 00:10:35.115 [40811] 1p3kde-000AcC-Lh ** aktualbeauty@yandex.ru F=<aktualiy__aktualbeautyrru__dk@zelda.beget.ru> P=<aktualiy__aktualbeautyrru__dk@zelda.beget.ru> R=dnslookup T=remote_smtp H=mx.yandex.ru [77.88.21.249]:25 I=[5.101.157.143]23666 X=TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128 CV=yes DN="/C=RU/ST=Moscow/L=Moscow/O=Yandex LLC/CN=mx.yandex.ru": SMTP error from remote mail server after end of data: 554 5.7.1 Message rejected under suspicion of SPAM; https://ya.cc/1IrBc 1670620235-YAi3fN2S9Sw1-V47iHicR
+2022-12-10 00:18:50.232 [41571] 1p3kld-000AoT-MV ** aktualbeauty@yandex.ru F=<aktualiy__aktualbeautyrru__dk@zelda.beget.ru> P=<aktualiy__aktualbeautyrru__dk@zelda.beget.ru> R=dnslookup T=remote_smtp H=mx.yandex.ru [77.88.21.249]:25 I=[5.101.157.143]13876 X=TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128 CV=yes DN="/C=RU/ST=Moscow/L=Moscow/O=Yandex LLC/CN=mx.yandex.ru": SMTP error from remote mail server after end of data: 554 5.7.1 Message rejected under suspicion of SPAM; https://ya.cc/1IrBc 1670620730-nIivWX2T7iE1-4eVupnK3
+```
+Можно видеть, что Яндекс отклонял письма, так как посчитал их спамом. 
+
+Может быть, это в том числе из-за того, что исходящий IP-адрес сервера zelda находится с нескольких спам-листах https://mxtoolbox.com/SuperTool.aspx?action=blacklist%3a+5.101.157.143+&run=toolpage
+
+Других явных причин не наблюдается. Думаю, стоило бы ее проверить письма на mail-tester.ru, может быть это даст больше информации, ну или покажет, что дело реально в бане IP-адреса.
 
 -----------------------------------------------
 
-4. Клиент попросил установить утилиту htop на хостинге. Скомпилируйте её и установите. Ссылка на страницу проекта: https://github.com/htop-dev/htop
+**4. Клиент попросил установить утилиту htop на хостинге. Скомпилируйте её и установите. Ссылка на страницу проекта: https://github.com/htop-dev/htop**
 
 Для компиляции использовал следующие команды:
 ```
@@ -156,13 +205,13 @@ make install
 
 ------------------------------------------
 
-5. Есть пользовательский скрипт: http://cp.beget.com/shared/lrCXX2_VDJXihJR4PKEDsNjn88e9Gz4Z/test.py
+**5. Есть пользовательский скрипт: http://cp.beget.com/shared/lrCXX2_VDJXihJR4PKEDsNjn88e9Gz4Z/test.py**
 ```
 eval = getattr(__import__(''.join([chr(x+50) for x in [48,47,65,51,4,2]])),''.join([chr(x+50) for x in [48,4,2,50,51,49,61,50,51]]));exec(eval(b'ZnJvbSBiYXNlNjQgaW1wb3J0IGI2NGVuY29kZSBhcyBlcXdlcjEsYjY0ZGVjb2RlIGFzIGJxd2VyMTtmcm9tIG9zIGltcG9ydCBzeXN0ZW0gYXMgcXdlcjE7ZnJvbSB0aW1lIGltcG9ydCBzbGVlcCBhcyBxd2FyMTtTVFI9YnF3ZXIxKGInWVdKalpBPT0nKS5kZWNvZGUoKSppbnQoYnF3ZXIxKCdNVEF3TUE9PScpKSticXdlcjEoYidDZz09JykuZGVjb2RlKCkKd2l0aCBvcGVuKCpicXdlcjEoYidkR1Z6ZEM1c2IyY3Nkdz09JykuZGVjb2RlKCkuc3BsaXQoJywnKSkgYXMgYWRhc2Q6CiAgYWRhc2Qud3JpdGUoJ3Rlc2ZkZmRzZmRzJyk7cXdlcjEoYnF3ZXIxKGInY20wZ2RHVnpkQzVzYjJjPScpLmRlY29kZSgpKQogIHdoaWxlIFRydWU6CiAgICBhZGFzZC53cml0ZShTVFIpO3F3YXIxKDAuMDAwMSkKCg=='))
 ```
 Скрипт работает с python3.6 и выше.
 При запуске скрипта возникает следующая проблема: Куда-то утекает место.
-Нужно найти причину - почему утекает место. 
+Нужно найти причину - почему утекает место.
 
 
 Запускаем скрипт и используем утилиту `lsof`:
@@ -170,7 +219,7 @@ eval = getattr(__import__(''.join([chr(x+50) for x in [48,47,65,51,4,2]])),''.jo
 root@idyajmjxba:~# ps -ax -o pid,cmd  | grep test.py | grep -v grep | awk '{print $1}' | xargs -I{} lsof -p {}
 COMMAND     PID USER   FD   TYPE DEVICE   SIZE/OFF NODE NAME
 python3.6 26574 root  cwd    DIR  252,1       4096 3842 /root
-python3.6 26574 root  rtd    DIR  252,1       4096    2 /
+python3.6 26574 root  rtd    DIR  252,1       4096    2 /аж
 python3.6 26574 root  txt    REG  252,1    4526456 7188 /usr/bin/python3.6
 python3.6 26574 root  mem    REG  252,1    1516558 7839 /usr/lib/locale/C.UTF-8/LC_COLLATE
 python3.6 26574 root  mem    REG  252,1    1700792 2247 /lib/x86_64-linux-gnu/libm-2.27.so
@@ -219,15 +268,15 @@ with open('test.log', 'w') as log:
 ------------------------------------
 
 
-6. Кто-то случайно выполнил такую команду: 
+**6. Кто-то случайно выполнил такую команду:**
 ```
 [15:46:24] slava@home ~ [0] $ sudo chmod 444 /bin/chmod
 [15:46:31] slava@home ~ [0] $ sudo chmod 755 /bin/chmod
 sudo: chmod: command not found
 ```
-Как исправить?
+**Как исправить?**
 
-Споссобов исправления данной проблемы достаточно много.
+Способов исправления данной проблемы достаточно много.
 
 1. Примониторироват корневую диру сервера или же директорию с `chmod` на устройство с работающим `chmod` через `ssfs`
 ```
@@ -265,12 +314,12 @@ int main () {
 
 ----------------------------------------
 
-7. У вас есть поврежденная ФС: http://cp.beget.com/shared/uOlWqjWUzxGHr_FB71clBoxvaO4ibIQC/test.img.broken . Все файлы имеют одинаковое содержимое (хеш файлов одинаковый).
+**7. У вас есть поврежденная ФС: http://cp.beget.com/shared/uOlWqjWUzxGHr_FB71clBoxvaO4ibIQC/test.img.broken . Все файлы имеют одинаковое содержимое (хеш файлов одинаковый).**
 Ответьте на следующие вопросы:  
-- Что это за файловая система (ext4, ext3, xfs)
-- Сколько в ней не поврежденных файлов?
-- Как вы её починили?
-- Как смонтировали?  
+- **Что это за файловая система (ext4, ext3, xfs)
+- **Сколько в ней не поврежденных файлов?
+- **Как вы её починили?**
+- **Как смонтировали?**
 
 1. Что это за файловая система (ext4, ext3, xfs)
 ```

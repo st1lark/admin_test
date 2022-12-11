@@ -133,7 +133,6 @@ root@idyajmjxba:~#
 
 Также привожу деобфусцированный код данного скрипта:
 ```
-from base64 import b64encode, b64decode
 from os import system
 from time import sleep
 

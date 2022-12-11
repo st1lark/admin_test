@@ -62,3 +62,69 @@ kB0EWEDCSs
 ![](https://github.com/st1lark/admin_test/blob/main/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%D0%BE%D1%82%202022-12-11%2010-56-11.png)
 
 
+
+3. Спамеры атакуют! Вам нужно найти всех пользователей, у которых было больше 300 невалидных отправок за прошедший день (можно взять вчерашний). Также, нужно разобрать - почему пользователь с самым большим числом невалидных отправок столько отправил и кто вызвал это.
+
+4. Клиент попросил установить утилиту htop на хостинге. Скомпилируйте её и установите. Ссылка на страницу проекта: https://github.com/htop-dev/htop
+
+Для компиляции использовал следующие команды:
+```
+./autoget.sh
+./configure --prefix=/home/s/stlark/.local
+make
+make install
+```
+
+Работющий htop можно увидеть в окружении docker на аккаунте stlark, запустив команду `htop`
+
+5. Есть пользовательский скрипт: http://cp.beget.com/shared/lrCXX2_VDJXihJR4PKEDsNjn88e9Gz4Z/test.py
+```
+eval = getattr(__import__(''.join([chr(x+50) for x in [48,47,65,51,4,2]])),''.join([chr(x+50) for x in [48,4,2,50,51,49,61,50,51]]));exec(eval(b'ZnJvbSBiYXNlNjQgaW1wb3J0IGI2NGVuY29kZSBhcyBlcXdlcjEsYjY0ZGVjb2RlIGFzIGJxd2VyMTtmcm9tIG9zIGltcG9ydCBzeXN0ZW0gYXMgcXdlcjE7ZnJvbSB0aW1lIGltcG9ydCBzbGVlcCBhcyBxd2FyMTtTVFI9YnF3ZXIxKGInWVdKalpBPT0nKS5kZWNvZGUoKSppbnQoYnF3ZXIxKCdNVEF3TUE9PScpKSticXdlcjEoYidDZz09JykuZGVjb2RlKCkKd2l0aCBvcGVuKCpicXdlcjEoYidkR1Z6ZEM1c2IyY3Nkdz09JykuZGVjb2RlKCkuc3BsaXQoJywnKSkgYXMgYWRhc2Q6CiAgYWRhc2Qud3JpdGUoJ3Rlc2ZkZmRzZmRzJyk7cXdlcjEoYnF3ZXIxKGInY20wZ2RHVnpkQzVzYjJjPScpLmRlY29kZSgpKQogIHdoaWxlIFRydWU6CiAgICBhZGFzZC53cml0ZShTVFIpO3F3YXIxKDAuMDAwMSkKCg=='))
+```
+Скрипт работает с python3.6 и выше.
+При запуске скрипта возникает следующая проблема: Куда-то утекает место.
+Нужно найти причину - почему утекает место. 
+
+6. Кто-то случайно выполнил такую команду: 
+```
+[15:46:24] slava@home ~ [0] $ sudo chmod 444 /bin/chmod
+[15:46:31] slava@home ~ [0] $ sudo chmod 755 /bin/chmod
+sudo: chmod: command not found
+```
+Как исправить?
+
+Споссобов исправления данной проблемы достаточно много.
+
+1. Примониторироват корневую диру сервера или же директорию с `chmod` на устройство с работающим `chmod` через `ssfs`
+```
+sshfs root@62.217.177.142:/ ./test
+chmod 755 ./test/bin/chmod
+```
+
+2. Поставить на сервер, если возможно, busybox и исправить права через его chmod:
+```
+busybox chmod 755 /bin/chmod
+```
+3. Через install:
+```
+install -m 755 /bin/chmod /bin/chmod.fix
+mv /bin/chmod /bin/chmod
+```
+4. В крайнем случае, можно использовать системные вызов `chmod()`:
+```
+#include <sys/stat.h>
+#include <stdio.h>
+
+int main () {
+
+        mode_t perm = S_IRUSR|S_IWUSR|S_IXUSR|S_IRGRP|S_IXGRP|S_IROTH|S_IXOTH;
+        char * chmod_path = "/bin/chmod";
+
+        if ( chmod(chmod_path, perm) == -1 ) {
+                perror("Error change chmod perrmission");
+                return 1;
+        }
+
+        return 0;
+}
+```

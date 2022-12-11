@@ -143,3 +143,54 @@ int main () {
 
 ----------------------------------------
 
+7. У вас есть поврежденная ФС: http://cp.beget.com/shared/uOlWqjWUzxGHr_FB71clBoxvaO4ibIQC/test.img.broken . Все файлы имеют одинаковое содержимое (хеш файлов одинаковый).
+Ответьте на следующие вопросы:  
+- Что это за файловая система (ext4, ext3, xfs)
+- Сколько в ней не поврежденных файлов?
+- Как вы её починили?
+- Как смонтировали?  
+
+1. Что это за файловая система (ext4, ext3, xfs)
+```
+root@qmtmeocreh:~# file test.img.broken 
+test.img.broken: SGI XFS filesystem data (blksz 4096, inosz 512, v2 dirs)
+root@qmtmeocreh:~# 
+```
+ну или
+```
+root@qmtmeocreh:~# mount test.img.broken /mnt/
+root@qmtmeocreh:~# df --print-type /mnt
+Filesystem     Type 1K-blocks  Used Available Use% Mounted on
+/dev/loop0     xfs      34524  5140     29384  15% /mnt
+root@qmtmeocreh:~# 
+```
+2. Сколько в ней не поврежденных файлов?
+неповрежденные файлы до починки:
+```
+root@qmtmeocreh:~# find /mnt -type f | xargs -I{}  sha512sum {} 2>/dev/null | sort | awk '{print $1}' | uniq -c
+find: ‘/mnt’: Structure needs cleaning
+    399 fd3ced82386a6b6c3671014e4eac090603a4f2ca84290343bbb13b588b510d0430bfcd04cd14209371d520d7f841233bcb7a7e25fd8095e335a7d665e4ff2d16
+root@qmtmeocreh:~# 
+```
+после починки:
+```
+root@qmtmeocreh:~# find /mnt -type f | xargs -I{}  sha512sum {} | sort | awk '{print $1}' | uniq -c
+      1 6687f85325a315eb2dedd8bb336659fcbd1a3dd686be5a4608aa665dc3eea376e784a00ef09193d94bf7c527ca592602e5e1a62642177b0a086225acf72b50d9
+      1 b7c0d359932e2cc0e85b731a285a66d57972b16893e0426d1605fa727ab698a25c54abdfb06436885af68dc5e2c85c0bfa997818ec3258068deee038470e249d
+   3489 fd3ced82386a6b6c3671014e4eac090603a4f2ca84290343bbb13b588b510d0430bfcd04cd14209371d520d7f841233bcb7a7e25fd8095e335a7d665e4ff2d16
+```
+Если исходить из того, что файлы имеют одинокове содержимое, то следующие файлы некорректны:
+```
+/mnt/README (3 191-я копия).md
+/mnt/README (398-я копия).md
+```
+
+3.  Как вы её починили?
+```
+xfs_repair test.img.broken
+```
+
+4. Как смонтировали?
+```
+mnt test.img.broken /mnt
+```
